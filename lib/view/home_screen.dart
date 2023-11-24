@@ -39,47 +39,121 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           : Padding(
               padding: const EdgeInsets.all(10),
-              child: ListView.builder(
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(
-                        data[index].name.toString(),
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                            color: Colors.black),
-                      ),
-                      subtitle: Text(
-                        data[index].age.toString(),
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
+              child: ListView.separated(
+                itemBuilder: (context, index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          IconButton(
-                              onPressed: () {
-                                name.text = data[index].name.toString();
-                                age.text = data[index].age.toString();
-                                addeditdata(context,
-                                    isEdit: true, index: index);
-                              },
-                              icon: Icon(Icons.edit)),
-                          IconButton(
-                              onPressed: () {
-                                controller.deletedata(index: index);
-                                loadData();
-                                setState(() {});
-                              },
-                              icon: Icon(Icons.delete))
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                data[index].name.toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 30,
+                                    color: Colors.black),
+                              ),
+                              Text(
+                                data[index].age.toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: Colors.black),
+                              ),
+                              Text(
+                                data[index].designation.toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: Colors.black),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    name.text = data[index].name.toString();
+                                    age.text = data[index].age.toString();
+                                    designation.text =
+                                        data[index].designation.toString();
+                                    addeditdata(context,
+                                        isEdit: true, index: index);
+                                  },
+                                  icon: Icon(Icons.edit)),
+                              IconButton(
+                                  onPressed: () {
+                                    controller.deletedata(index: index);
+                                    loadData();
+                                    setState(() {});
+                                  },
+                                  icon: Icon(Icons.delete))
+                            ],
+                          )
                         ],
                       ),
-                    );
-                  }),
-            ),
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return SizedBox(
+                    height: 10,
+                  );
+                },
+                itemCount: data.length,
+              )
+              //  ListView.builder(
+              //     itemCount: data.length,
+              //     itemBuilder: (context, index) {
+              //       return ListTile(
+              //         title: Text(
+              //           data[index].name.toString(),
+              //           style: TextStyle(
+              //               fontWeight: FontWeight.bold,
+              //               fontSize: 24,
+              //               color: Colors.black),
+              //         ),
+              //         subtitle: Text(
+              //           data[index].age.toString(),
+              //         ),
+              //         trailing: Row(
+              //           mainAxisSize: MainAxisSize.min,
+              //           children: [
+              //             IconButton(
+              //                 onPressed: () {
+              //                   name.text = data[index].name.toString();
+              //                   age.text = data[index].age.toString();
+              //                   addeditdata(context,
+              //                       isEdit: true, index: index);
+              //                 },
+              //                 icon: Icon(Icons.edit)),
+              //             IconButton(
+              //                 onPressed: () {
+              //                   controller.deletedata(index: index);
+              //                   loadData();
+              //                   setState(() {});
+              //                 },
+              //                 icon: Icon(Icons.delete))
+              //           ],
+              //         ),
+              //       );
+              //     }),
+              ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           name.clear();
           age.clear();
+          designation.clear();
           addeditdata(context);
         },
         // backgroundColor: Colors.red,
@@ -113,20 +187,33 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: 20,
                 ),
+                TextField(
+                  controller: designation,
+                  decoration: InputDecoration(
+                      hintText: 'Designation', border: OutlineInputBorder()),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
                 ElevatedButton(
                     onPressed: () {
-                      // if (isEdit) {
-                      //   controller.editdata(
-                      //       index: index,
-                      //       data: UserModel(name: name.text, age: age.text));
-                      // } else {
-                      //   controller
-                      //       .adddata(UserModel(name: name.text, age: age.text));
-                      // }
+                      if (isEdit) {
+                        controller.editdata(
+                            index: index,
+                            data: UserModel(
+                                name: name.text,
+                                age: age.text,
+                                designation: designation.text));
+                      } else {
+                        controller.adddata(UserModel(
+                            name: name.text,
+                            age: age.text,
+                            designation: designation.text));
+                      }
 
-                      // loadData();
-                      // setState(() {});
-                      // Navigator.pop(context);
+                      loadData();
+                      setState(() {});
+                      Navigator.pop(context);
                     },
                     child: Text('SAVE'))
               ]),
